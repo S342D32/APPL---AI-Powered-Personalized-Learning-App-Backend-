@@ -1,0 +1,139 @@
+
+
+Python for Beginners –Cheat Sheet
+Data types and Collections
+in t e g e r10
+f l o a t3 . 1 4
+b o o l e a nT r u e / F a l s e
+s t r i n g‘abcde’
+l i s t[ 1 ,   2 ,   3 ,   4 ,   5 ]
+t u p l e(1, 2, ‘a’, ‘b’)
+s e t{‘a’, ’b’, ’c’}
+di c t i o n a r y{‘a’:1, ‘b’:2}
+Numerical Operators
++a d d i t i o n
+-s u b t r a c t i o n        
+*m u l t i p l i c a t i o n
+/d i v i s i o n
+**e x p o n e n t
+%m o d u l u s
+//f l o o r   d i v i s i o n
+Comparison  Operators
+<l e s s
+<=l e s s   o r   e q u a l        
+>g r e a t e r
+>=g r e a t e r   o r   e q u a l
+==e q u a l
+!=n o t   e q u a l
+Logical Operators
+a n dl o g i c a l   A N D
+orl o g i c a l   O R        
+n o tl o g i c a l   N O T
+Membership  Operators
+inv a l u e   i n   o b j e c t
+no t   i nv a l u e   n o t   i n   o b j e c t
+Operations
+S t r i n g s :
+s[i]i : t h   i t e m   o f   s
+s[-1]l a s t   i t e m   o f   s
+L i s t s :
+l=   [ ]d e f i n e   e m p t y   l i s t
+l[i : j]s l i c e   i n   r a n g e  it o   j
+l[i]   =   xr e p l a c e  iw i t h   x
+l[i : j : k]s l i c e   r a n g e  it o   j ,   s t e p   k
+D i c t i o n a r i e s :
+d=   { }c r e a t e   e m p t y   d i c t i o n a r y
+d[i]r e t r i e v e   i t e m   w i t h   k e y  i
+d[i]=   xs t o r e   x   t o   k e y   I
+ii n   di s   k e y  ii n   d i c t i o n a r y
+Index starts at 0
+String Methods
+s . s t r i p()r e m o v e   t r a i l i n g   w h i t e s p a c e
+s . s p l i t( x )r e t u r n   l i s t ,   d e l i m i t e r   x
+s . j o i n(l)r e t u r n   s t r i n g ,   d e l i m i t e r   s
+s . s t a r t s w i t h( x )r e t u r n   T r u e   i f   s   s t a r t s   w i t h   x
+s . e n d s w i t h( x )r e t u r n   T r u e   i f   s   e n d s   w i t h   x
+s . u p p e r()r e t u r n   c o p y ,   u p p e r c a s e   o n l y
+s . l o w e r()r e t u r n   c o p y ,   l o w e r c a s e   o n l y
+List Methods
+l . a p p e n d( x )a p p e n d   x   t o   e n d   o f   l i s t
+l . i n s e r t( I ,   x )i n s e r t   x   a t   p o s i t i o n  i
+l . r e m o v e( x )r e m o v e   f i r s t   o c c u r r e n c e   o f   x
+l . r e v e r s e()r e v e r s e   l i s t   i n   p l a c e
+Dictionary  Methods
+d . k e y s()r e t u r n s   a   l i s t   o f   k e y s
+d . v a l u e s()r e t u r n s   a   l i s t   o f   v a l u e s
+d. i t e m s()r e t u r n s   a   l i s t   o f   ( k e y ,   v a l u e )
+Conditional Statements
+if c o n d i t i o n :
+< c o d e >
+el i fc o n d i t i o n :
+< c o d e >
+el s e :
+< c o d e >
+Import from Module
+f r o m   m o d u l e  i m p o r t  f u n ci m p o r t  f u n c
+f r o m   m o d u l e   i m p o r t  f u n ca s   fi m p o r t  f u n ca s   f
+
+Python for Beginners –Cheat Sheet
+Built-in Functions
+fl o a t ( x )c o n v e r t   x   t o   f l o a t
+int( x )c o n v e r t   x   t o   i n t e g e r
+str( x )c o n v e r t   x   t o   s t r i n g
+se t ( x )c o n v e r t   x   t o   s e t
+ty p e ( x )r e t u r n s   t y p e   o f   x
+len( x )r e t u r n s   l e n g t h   o f   x
+ma x ( x )r e t u r n s   m a x i m u m   o f   x
+mi n ( x )r e t u r n s   m i n i m u m   o f   x
+su m ( x )r e t u r n s   s u m   o f   v a l u e s   i n   x
+so r t e d ( x )r e t u r n s   s o r t e d   l i s t
+ro u n d ( x ,   d )r e t u r n s   x   r o u n d e d   t o   d
+pr i n t ( x )p r i n t   o b j e c t   x
+Loops
+w h i l e  c o n d i t i o n :
+< c o d e >
+f o r  v a rinl i s t :
+< c o d e >
+C o n t r o l   s t a t e m e n t s :
+br e a kt e r m i n a t e   l o o p
+co n t i n u ej u m p   t o   n e x t   i t e r a t i o n
+pass d o e s   n o t h i n g
+Functions
+d e fN a m e ( p a r a m 1 ,   p a r a m 2   =  v a l):
+< c o d e>
+# p a r a m 2   o p t i o n a l ,   d e f a u l t :  v a l
+r e t u r n  < d a t a>
+Reading and Writing Files
+fh=   o p e n( < p a t h >,’r’)
+fo r   l i n e   i n  fh:
+< c o d e >
+fh . c l o s e()
+ou t   =   o p e n (< p a t h >,’w’)
+ou t . w r i t e(<str>)
+ou t . c l o s e()
+Regular Expressions
+im p o r t   r e
+p= r e . c o m p i l e( p a t t e r n )c o m p i l e   s e a r c h   q u e r y
+p . s e a r c h( t e x t )s e a r c h   f o r   a l l   m a t c h e s
+p . s u b( s u b ,   t e x t )s u b s t i t u t e   m a t c h   w i t h   s u b  
+.            a n y  o n e  c h a r a c t e r
+* r e p e a t  p r e v i o u s   0   o r   m o r e  t i m e s
++            r e p e a t  p r e v i o u s   1   o r   m o r e  t i m e s
+?            r e p e a t  p r e v i o u s   0   o r   1  t i m e s
+\d          a n y   d i g i t
+\s          a n y   w h i t e s p a c e
+[abc]a n y  c h a r a c t e r   i n   t h i s   s e t   { a ,   b ,   c}
+[^abc]a n y  c h a r a c t e r   * n o t *   i n   t h i s  s e t
+[a-z ]    a n y  l e t t e r   b e t w e e n   a   a n d  z
+a | ba   o r   b
+String Formatting
+“Put {}into a {}”.format(“values”, “string”)
+‘Put values into a string’
+“Put whitespace after: {:<10}, or before:{:>10}”.format(“a”,”b”)
+‘Put whitespace after: a         , or before:          b’
+“Put whitespace around:{:^10}.”.format(“c”)
+‘Put whitespace around:        c         .
+sys.argv
+im p o r t   s y si m p o r t  m o d u l e
+sy s . a r g v[ 0 ]n a m e  o f   s c r i p t
+sy s . a r g v[ 1 ]f i r s t  c m dl i n e  a r g
