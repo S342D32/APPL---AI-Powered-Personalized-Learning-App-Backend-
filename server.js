@@ -37,7 +37,8 @@ app.use(cors({
         'https://appl-ai-powered-personalized-learni.vercel.app',
         'https://your-app.vercel.app'
     ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
