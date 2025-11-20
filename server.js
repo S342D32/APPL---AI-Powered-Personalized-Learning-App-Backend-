@@ -59,9 +59,41 @@ app.use('/api', aiRoutes);
 app.use('/api', quizRoutes);
 console.log('Routes loaded successfully');
 
+// Log all registered routes for debugging
+app._router.stack.forEach(function(r){
+  if (r.route && r.route.path){
+    console.log('Registered route:', r.route.path);
+  }
+});
+
 // Debug route to check if server is running
 app.get('/api/status', (req, res) => {
-    res.json({ status: 'Server is running' });
+    res.json({ 
+        status: 'Server is running',
+        timestamp: new Date().toISOString(),
+        routes: {
+            auth: '/api (auth routes)',
+            user: '/api (user routes)', 
+            ai: '/api (ai routes)',
+            quiz: '/api (quiz routes)'
+        }
+    });
+});
+
+// Add explicit route handlers for debugging
+app.get('/api/test-routes', (req, res) => {
+    res.json({
+        availableRoutes: [
+            'GET /api/status',
+            'POST /api/sync-user',
+            'GET /api/quiz-attempts/:userId',
+            'POST /api/save-quiz-attempt',
+            'POST /api/generate-mcq',
+            'POST /api/process-pdf',
+            'POST /api/summarize',
+            'POST /api/chat'
+        ]
+    });
 });
 
 // Error handling middleware
