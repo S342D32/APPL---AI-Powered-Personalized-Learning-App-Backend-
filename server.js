@@ -32,7 +32,11 @@ if (!fs.existsSync(pdfUploadsDir)){
 
 // Middleware
 app.use(cors({
-    origin: [process.env.FRONTEND_URL || 'http://localhost:5173', 'https://your-app.vercel.app'],
+    origin: [
+        process.env.FRONTEND_URL || 'http://localhost:5173', 
+        'https://appl-ai-powered-personalized-learni.vercel.app',
+        'https://your-app.vercel.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
