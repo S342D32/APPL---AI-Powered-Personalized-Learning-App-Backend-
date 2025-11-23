@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        button { padding: 10px 20px; margin: 5px; }
+        pre { background: #f8f9fa; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Backend Connection Test</h1>
+    
+    <div>
+        <label>Backend URL:</label>
+        <input type="text" id="backendUrl" value="https://appl-ai-powered-personalized-learning-app.onrender.com" style="width: 400px;">
+    </div>
+    
+    <div>
+        <label>User ID:</label>
+        <input type="text" id="userId" value="user_2u5Fu03f5k36EvjuPYHXAAAePEk" style="width: 300px;">
+    </div>
+    
+    <div>
+        <button onclick="testHealth()">Test Health</button>
+        <button onclick="testStatus()">Test Status</button>
+        <button onclick="testUser()">Test User Session</button>
+        <button onclick="testQuizAttempts()">Test Quiz Attempts</button>
+        <button onclick="testChat()">Test Chat</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        function getBackendUrl() {
+            return document.getElementById('backendUrl').value;
+        }
+        
+        function getUserId() {
+            return document.getElementById('userId').value;
+        }
+        
+        function addResult(title, success, data) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test ${success ? 'success' : 'error'}`;
+            div.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            results.appendChild(div);
+        }
+        
+        async function testHealth() {
+            try {
+                const response = await fetch(`${getBackendUrl()}/health`);
+                const data = await response.json();
+                addResult('Health Check', response.ok, { status: response.status, data });
+            } catch (error) {
+                addResult('Health Check', false, { error: error.message });
+            }
+        }
+        
+        async function testStatus() {
+            try {
+                const response = await fetch(`${getBackendUrl()}/api/status`);
+                const data = await response.json();
+                addResult('Status Check', response.ok, { status: response.status, data });
+            } catch (error) {
+                addResult('Status Check', false, { error: error.message });
+            }
+        }
+        
+        async function testUser() {
+            try {
+                const response = await fetch(`${getBackendUrl()}/api/test-user`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer fake-token-for-testing'
+                    }
+                });
+                const data = await response.json();
+                addResult('User Session Test', response.ok, { status: response.status, data });
+            } catch (error) {
+                addResult('User Session Test', false, { error: error.message });
+            }
+        }
+        
+        async function testQuizAttempts() {
+            try {
+                const userId = getUserId();
+                const response = await fetch(`${getBackendUrl()}/api/quiz-attempts/${userId}`);
+                const data = await response.json();
+                addResult('Quiz Attempts', response.ok, { status: response.status, data });
+            } catch (error) {
+                addResult('Quiz Attempts', false, { error: error.message });
+            }
+        }
+        
+        async function testChat() {
+            try {
+                const response = await fetch(`${getBackendUrl()}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Hello, this is a test message',
+                        category: 'general'
+                    })
+                });
+                const data = await response.json();
+                addResult('Chat Test', response.ok, { status: response.status, data });
+            } catch (error) {
+                addResult('Chat Test', false, { error: error.message });
+            }
+        }
+        
+        // Clear results
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Add clear button
+        document.addEventListener('DOMContentLoaded', function() {
+            const clearBtn = document.createElement('button');
+            clearBtn.textContent = 'Clear Results';
+            clearBtn.onclick = clearResults;
+            document.querySelector('div').appendChild(clearBtn);
+        });
+    </script>
+</body>
+</html>

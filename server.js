@@ -30,21 +30,30 @@ if (!fs.existsSync(pdfUploadsDir)){
     fs.mkdirSync(pdfUploadsDir, { recursive: true });
 }
 
+// Import Clerk middleware
+const { verifyClerkToken } = require('./middleware/clerk');
+
 // Middleware
 app.use(cors({
     origin: [
         process.env.FRONTEND_URL || 'http://localhost:5173', 
         'https://appl-ai-powered-personalized-learni.vercel.app',
         'https://appl-ai-powered-personalized-learning-app.onrender.com',
-        'https://your-app.vercel.app'
+        'https://your-app.vercel.app',
+        /\.vercel\.app$/,
+        /\.onrender\.com$/
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true
 }));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
+
+// Apply Clerk middleware to all API routes
+app.use('/api', verifyClerkToken);
 
 // Handle preflight OPTIONS requests
 app.options('*', (req, res) => {
@@ -106,11 +115,24 @@ app.get('/api/status', (req, res) => {
     });
 });
 
+// Test user session endpoint
+app.get('/api/test-user', (req, res) => {
+    res.json({
+        message: 'User session test',
+        user: req.user,
+        headers: {
+            authorization: req.headers.authorization ? 'Present' : 'Missing'
+        },
+        timestamp: new Date().toISOString()
+    });
+});
+
 // Add explicit route handlers for debugging
 app.get('/api/test-routes', (req, res) => {
     res.json({
         availableRoutes: [
             'GET /api/status',
+            'GET /api/test-user',
             'POST /api/sync-user',
             'GET /api/quiz-attempts/:userId',
             'POST /api/save-quiz-attempt',
