@@ -42,6 +42,9 @@ app.use(cors({
     credentials: true
 }));
 
+// Handle preflight OPTIONS requests for all routes
+app.options('*', cors());
+
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
@@ -58,6 +61,14 @@ app.use('/api', userRoutes);
 app.use('/api', aiRoutes);
 app.use('/api', quizRoutes);
 console.log('Routes loaded successfully');
+
+// Test the specific route
+app.get('/api/test-generate-mcq', (req, res) => {
+    res.json({ message: 'generate-mcq route is accessible', method: 'GET' });
+});
+app.post('/api/test-generate-mcq', (req, res) => {
+    res.json({ message: 'generate-mcq route is accessible', method: 'POST' });
+});
 
 // Log all registered routes for debugging
 app._router.stack.forEach(function(r){
@@ -88,6 +99,23 @@ app.get('/api/test-routes', (req, res) => {
             'POST /api/sync-user',
             'GET /api/quiz-attempts/:userId',
             'POST /api/save-quiz-attempt',
+            'POST /api/generate-mcq',
+            'POST /api/process-pdf',
+            'POST /api/summarize',
+            'POST /api/chat'
+        ]
+    });
+});
+
+// Catch-all route handler for unmatched routes
+app.use('*', (req, res) => {
+    console.log(`404 - Route not found: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({
+        error: 'Route not found',
+        method: req.method,
+        url: req.originalUrl,
+        availableRoutes: [
+            'GET /api/status',
             'POST /api/generate-mcq',
             'POST /api/process-pdf',
             'POST /api/summarize',
