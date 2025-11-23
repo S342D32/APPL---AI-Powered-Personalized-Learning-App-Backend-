@@ -35,6 +35,7 @@ app.use(cors({
     origin: [
         process.env.FRONTEND_URL || 'http://localhost:5173', 
         'https://appl-ai-powered-personalized-learni.vercel.app',
+        'https://appl-ai-powered-personalized-learning-app.onrender.com',
         'https://your-app.vercel.app'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -42,33 +43,41 @@ app.use(cors({
     credentials: true
 }));
 
-// Handle preflight OPTIONS requests for all routes
-app.options('*', cors());
-
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+
+// Handle preflight OPTIONS requests
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.sendStatus(200);
+});
 
 // Debug middleware to log all requests
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+    console.log('Headers:', req.headers);
     next();
 });
 
 // Routes
 console.log('Loading routes...');
-app.use('/api', authRoutes);
-app.use('/api', userRoutes);
-app.use('/api', aiRoutes);
-app.use('/api', quizRoutes);
-console.log('Routes loaded successfully');
-
-// Test the specific route
-app.get('/api/test-generate-mcq', (req, res) => {
-    res.json({ message: 'generate-mcq route is accessible', method: 'GET' });
-});
-app.post('/api/test-generate-mcq', (req, res) => {
-    res.json({ message: 'generate-mcq route is accessible', method: 'POST' });
-});
+try {
+    app.use('/api', authRoutes);
+    console.log('✓ Auth routes loaded');
+    app.use('/api', userRoutes);
+    console.log('✓ User routes loaded');
+    app.use('/api', aiRoutes);
+    console.log('✓ AI routes loaded');
+    app.use('/api', quizRoutes);
+    console.log('✓ Quiz routes loaded');
+    console.log('All routes loaded successfully');
+} catch (error) {
+    console.error('Error loading routes:', error);
+    process.exit(1);
+}
 
 // Log all registered routes for debugging
 app._router.stack.forEach(function(r){
@@ -77,11 +86,17 @@ app._router.stack.forEach(function(r){
   }
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
 // Debug route to check if server is running
 app.get('/api/status', (req, res) => {
     res.json({ 
         status: 'Server is running',
         timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development',
         routes: {
             auth: '/api (auth routes)',
             user: '/api (user routes)', 
@@ -107,29 +122,31 @@ app.get('/api/test-routes', (req, res) => {
     });
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(500).json({
-        error: 'Internal Server Error',
-        message: err.message
-    });
-});
-
-// Catch-all route handler for unmatched routes (must be last)
+// 404 handler for unmatched routes
 app.use('*', (req, res) => {
     console.log(`404 - Route not found: ${req.method} ${req.originalUrl}`);
     res.status(404).json({
         error: 'Route not found',
-        method: req.method,
-        url: req.originalUrl,
+        message: `The requested endpoint ${req.method} ${req.originalUrl} does not exist`,
         availableRoutes: [
             'GET /api/status',
+            'GET /api/quiz-attempts/:userId',
+            'POST /api/save-quiz-attempt',
             'POST /api/generate-mcq',
             'POST /api/process-pdf',
             'POST /api/summarize',
             'POST /api/chat'
         ]
+    });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({
+        error: 'Internal Server Error',
+        message: err.message,
+        timestamp: new Date().toISOString()
     });
 });
 

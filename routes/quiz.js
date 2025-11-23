@@ -6,10 +6,17 @@ const { QuizAttempt } = require('../models');
 router.get('/quiz-attempts/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log(`Fetching quiz attempts for user: ${userId}`);
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
     
     const quizAttempts = await QuizAttempt.find({ userId })
       .sort({ createdAt: -1 })
       .limit(50);
+    
+    console.log(`Found ${quizAttempts.length} quiz attempts for user ${userId}`);
 
     // Calculate user statistics
     const totalAttempts = quizAttempts.length;
@@ -44,7 +51,11 @@ router.get('/quiz-attempts/:userId', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching quiz attempts:', error);
-    res.status(500).json({ error: 'Failed to fetch quiz attempts' });
+    res.status(500).json({ 
+      error: 'Failed to fetch quiz attempts',
+      message: error.message,
+      userId: req.params.userId
+    });
   }
 });
 

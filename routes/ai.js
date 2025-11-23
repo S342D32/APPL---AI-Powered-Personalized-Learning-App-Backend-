@@ -172,9 +172,11 @@ router.post('/save-quiz-result', verifyToken, async (req, res) => {
 
 // Add Gemini API chat endpoint
 router.post('/chat', async (req, res) => {
+  console.log('Chat endpoint hit:', req.body);
   const { message, context, category, interactionCount = 0 } = req.body;
   
   if (!message) {
+    console.log('Chat request missing message');
     return res.status(400).json({ error: 'Message is required' });
   }
   
@@ -206,7 +208,8 @@ router.post('/chat', async (req, res) => {
     console.error('Chat API Error:', error);
     res.status(500).json({
       error: 'Failed to generate response',
-      details: error.message
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
