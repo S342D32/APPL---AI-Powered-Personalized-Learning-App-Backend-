@@ -107,7 +107,16 @@ app.get('/api/test-routes', (req, res) => {
     });
 });
 
-// Catch-all route handler for unmatched routes
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({
+        error: 'Internal Server Error',
+        message: err.message
+    });
+});
+
+// Catch-all route handler for unmatched routes (must be last)
 app.use('*', (req, res) => {
     console.log(`404 - Route not found: ${req.method} ${req.originalUrl}`);
     res.status(404).json({
@@ -121,15 +130,6 @@ app.use('*', (req, res) => {
             'POST /api/summarize',
             'POST /api/chat'
         ]
-    });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(500).json({
-        error: 'Internal Server Error',
-        message: err.message
     });
 });
 
