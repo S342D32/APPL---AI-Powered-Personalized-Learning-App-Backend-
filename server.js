@@ -15,8 +15,26 @@ const quizRoutes = require('./routes/quiz');
 // const { connectMySQL } = require('./config/database');
 const { connectMongoDB } = require('./config/database');
 const { testApiConnection } = require('./services/ai');
+const { verifyClerkToken } = require('./middleware/clerk');
 
 const app = express();
+
+// Middleware
+app.use(cors({
+    origin: [
+        process.env.FRONTEND_URL || 'http://localhost:5173', 
+        'https://appl-ai-powered-personalized-learni.vercel.app',
+        'https://appl-ai-powered-personalized-learning-app.onrender.com',
+        /\.vercel\.app$/,
+        /\.onrender\.com$/
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -29,28 +47,6 @@ const pdfUploadsDir = path.join(__dirname, 'uploads', 'pdfs');
 if (!fs.existsSync(pdfUploadsDir)){
     fs.mkdirSync(pdfUploadsDir, { recursive: true });
 }
-
-// Import Clerk middleware
-const { verifyClerkToken } = require('./middleware/clerk');
-
-// Middleware
-app.use(cors({
-    origin: [
-        process.env.FRONTEND_URL || 'http://localhost:5173', 
-        'https://appl-ai-powered-personalized-learni.vercel.app',
-        'https://appl-ai-powered-personalized-learning-app.onrender.com',
-        'https://your-app.vercel.app',
-        /\.vercel\.app$/,
-        /\.onrender\.com$/
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    credentials: true
-}));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static('uploads'));
 
 // Apply Clerk middleware to all API routes
 app.use('/api', verifyClerkToken);
